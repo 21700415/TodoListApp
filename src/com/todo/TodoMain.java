@@ -9,13 +9,16 @@ import com.todo.service.TodoUtil;
 public class TodoMain {
 	
 	public static void start() {
+		
+		Menu.displaymenu();
 	
 		Scanner sc = new Scanner(System.in);
 		TodoList l = new TodoList();
 		boolean isList = false;
 		boolean quit = false;
+		TodoUtil.loadList(l, "todolist.txt");
 		do {
-			Menu.displaymenu();
+			System.out.print("명령을 내려주세요");
 			isList = false;
 			String choice = sc.next();
 			switch (choice) {
@@ -55,13 +58,19 @@ public class TodoMain {
 			case "exit":
 				quit = true;
 				break;
+				
+			case "help":
+				Menu.displaymenu();
+				break;
+				
 
 			default:
-				System.out.println("please enter one of the above mentioned command");
+				System.out.println("올바른 명령을 입력해주세요 모르겠으면 help를 누르세요");
 				break;
 			}
 			
 			if(isList) l.listAll();
 		} while (!quit);
+		TodoUtil.saveList(l, "todolist.txt");
 	}
 }
