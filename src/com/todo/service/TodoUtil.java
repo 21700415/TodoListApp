@@ -65,7 +65,7 @@ public class TodoUtil {
 		System.out.println("\n"
 				+ "수정할 항목의 제목을 입력하세요\n"
 				+ "\n");
-		String title = sc.next().trim();
+		String title = sc.nextLine().trim();
 		if (!l.isDuplicate(title)) {
 			System.out.println("존재하지 않는 제목입니다");
 			return;
