@@ -15,8 +15,12 @@ public class TodoUtil {
 	
 	public static void createItem(TodoList list) {
 		
-		String title, desc;
+		String title, desc, category, due_date;
 		Scanner sc = new Scanner(System.in);
+		
+		System.out.println("\n"
+				+ "카테고리를 입력하세요 > \n");
+		category = sc.nextLine();
 		
 		System.out.println("\n"
 				+ "제목을 입력하세요 > \n");
@@ -28,28 +32,36 @@ public class TodoUtil {
 		}
 		
 		sc.nextLine();
-		System.out.println("설명을 입력하세요 > ");
+		System.out.println("\n"
+				 + "설명을 입력하세요 > \n");
 		desc = sc.nextLine().trim();
 		
+		System.out.println("\n"
+				+ "마감일자를 입력하세요 > \n");
 		
-		TodoItem t = new TodoItem(title, desc);
+		due_date = sc.nextLine();
+		
+		
+		TodoItem t = new TodoItem(title, desc, category, due_date);
 		list.addItem(t);
 		System.out.println("항목이 추가되었습니다");
 	}
 
 	public static void deleteItem(TodoList l) {
+		int i = 0;
 		
 		System.out.println("\n"
-				+ "삭제할 항목의 이름을 입력하세요\n"
+				+ "삭제할 항목의 번호를 입력하세요\n"
 				+ "\n");
 		
 		Scanner sc = new Scanner(System.in);
-		String title = sc.next();
+		int num = sc.nextInt();
 		
 		
 		
 		for (TodoItem item : l.getList()) {
-			if (title.equals(item.getTitle())) {
+			i++;
+			if (i == num) {
 				l.deleteItem(item);
 				System.out.println("삭제되었습니다");
 				break;
@@ -60,14 +72,16 @@ public class TodoUtil {
 
 	public static void updateItem(TodoList l) {
 		
+		int i = 0;
+		
 		Scanner sc = new Scanner(System.in);
 		
 		System.out.println("\n"
-				+ "수정할 항목의 제목을 입력하세요\n"
+				+ "수정할 항목의 번호 입력하세요\n"
 				+ "\n");
-		String title = sc.nextLine().trim();
-		if (!l.isDuplicate(title)) {
-			System.out.println("존재하지 않는 제목입니다");
+		int num = sc.nextInt();
+		if (l.getList().size() < num) {
+			System.out.println("그런번호는 없읍니다.");
 			return;
 		}
 
@@ -77,23 +91,36 @@ public class TodoUtil {
 			System.out.println("동일한 이름이 이미 있습니다");
 			return;
 		}
-		
+		sc.nextLine();
 		System.out.println("새로운 설명을 입력하세요");
 		String new_description = sc.nextLine().trim();
+		
+		System.out.println("새로운 카테코리를 입력하세요");
+		String new_category = sc.nextLine().trim();
+		
+		System.out.println("새로운 마감일자를 입력하세요");
+		String new_due_date = sc.nextLine().trim();
+		
 		for (TodoItem item : l.getList()) {
-			if (item.getTitle().equals(title)) {
-				l.deleteItem(item);
-				TodoItem t = new TodoItem(new_title, new_description);
-				l.addItem(t);
-				System.out.println("수정되었습니다");
+			i++;
+			if (i == num) {
+				item.setTitle(new_title);
+				item.setDesc(new_description);
+				item.setDue_date(new_due_date);
+				item.setCategory(new_category);
+				break;
 			}
 		}
 
 	}
 
 	public static void listAll(TodoList l) {
+		int i = 0;
+		System.out.println("갯수 " +l.getList().size());
 		for (TodoItem item : l.getList()) {
-			System.out.println("항목의 제목 : " + item.getTitle() + "  항목의 설명 : " + item.getDesc() + " 생성된 시간 : " +item.getCurrent_date());
+			i++;
+			System.out.println(i + ". " + "카테고리 " + item.getCategory() + " 제목 : " + item.getTitle() + 
+					" 설명 : " + item.getDesc() + " 생성된 시간 : " +item.getCurrent_date() + " 마감일자 :" + item.getDue_date());
 		}
 	}
 	public static void saveList(TodoList l, String filename) {
@@ -124,7 +151,9 @@ public class TodoUtil {
 				String title = st.nextToken();
 				String desc = st.nextToken();
 				String date = st.nextToken();
-				TodoItem a = new TodoItem(title, desc);
+				String category = st.nextToken();
+				String due_date = st.nextToken();
+				TodoItem a = new TodoItem(title, desc, category, due_date);
 				a.setCurrent_date(date);
 				l.addItem(a);
 				
@@ -134,6 +163,22 @@ public class TodoUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+	}
+
+	public static void findItem(TodoList l) {
+		int i = 0;
+		Scanner sc = new Scanner(System.in);
+		System.out.println("찾을 제목이나 내용을 입력하세요");
+		String content = sc.nextLine();
+		for (TodoItem item : l.getList()) {
+			i++;
+			if (item.getTitle().contains(content) || item.getDesc().contains(content)) {
+				System.out.println(i + ". " + "카테고리 " + item.getCategory() + " 제목 : " + item.getTitle() + 
+						" 설명 : " + item.getDesc() + " 생성된 시간 : " +item.getCurrent_date() + " 마감일자 :" + item.getDue_date());
+			}
+		}
+
 		
 	}
 }

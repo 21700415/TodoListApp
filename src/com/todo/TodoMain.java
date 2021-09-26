@@ -63,6 +63,10 @@ public class TodoMain {
 				Menu.displaymenu();
 				break;
 				
+			case "find":
+				TodoUtil.findItem(l);
+				break;
+				
 
 			default:
 				System.out.println("올바른 명령을 입력해주세요 모르겠으면 help를 누르세요");
