@@ -17,6 +17,7 @@ public class TodoUtil {
 	public static void createItem(TodoList l) {
 		
 		String title, desc, category, due_date;
+		int difficulty, significance;
 		Scanner sc = new Scanner(System.in);
 		
 		System.out.println("\n"
@@ -42,35 +43,37 @@ public class TodoUtil {
 		
 		due_date = sc.nextLine();
 		
+		System.out.println("\n"
+				+ "난이도를 입력하세요 > \n");
+		difficulty = sc.nextInt();
 		
-		TodoItem t = new TodoItem(title, desc, category, due_date);
+		System.out.println("\n"
+				+ "중요도를 입력하세요 > \n");
+		significance = sc.nextInt();
+		
+		
+		TodoItem t = new TodoItem(title, desc, category, due_date, difficulty, significance);
 		if(l.addItem(t)>0)
 			System.out.println("항목이 추가되었습니다");
 	}
 
 	public static void deleteItem(TodoList l) {
-		int i = 0;
-		
-		System.out.println("\n"
-				+ "삭제할 항목의 번호를 입력하세요\n"
-				+ "\n");
-		
 		Scanner sc = new Scanner(System.in);
-		int num = sc.nextInt();
 		
+		System.out.println("삭제할 항목의 번호들을 입력하세요");
 		
+		String indexs = sc.nextLine();
 		
-		for (TodoItem item : l.getList()) {
-			i++;
-			if (i == num) {
-				//l.deleteItem(i);
-				
-				break;
-			}
+		String[]index = indexs.split(" ");
+		
+		for(int i=0; i<index.length; i++) {
+			l.deleteItem(Integer.parseInt(index[i]));
 		}
-		if (l.deleteItem(i)>0)
-			System.out.println("삭제되었습니다");
+		System.out.println("삭제되었습니다.");
 	}
+		
+			
+	
 
 
 	public static void updateItem(TodoList l) {
@@ -101,6 +104,10 @@ public class TodoUtil {
 		String new_category = sc.nextLine().trim();
 		System.out.println("새로운 마감일자를 입력하세요");
 		String new_due_date = sc.nextLine().trim();
+		System.out.println("새로운 난이도를 입력하세요");
+		int new_difficulty = sc.nextInt();
+		System.out.println("새로운 중요도를 입력하세요");
+		int new_significance = sc.nextInt();
 		
 		for (TodoItem item : l.getList()) {
 			i++;
@@ -112,7 +119,7 @@ public class TodoUtil {
 				break;
 			}
 		}
-		TodoItem t = new TodoItem(new_title, new_desc, new_category, new_due_date);
+		TodoItem t = new TodoItem(new_title, new_desc, new_category, new_due_date, new_difficulty, new_significance);
 		t.setId(i);
 		if(l.updateItem(t) > 0)
 			System.out.println("수정되었습니다.");
@@ -120,11 +127,9 @@ public class TodoUtil {
 	}
 
 	public static void listAll(TodoList l) {
-		int i = 0;
-		System.out.println("갯수 " +l.getCount());
-		for (TodoItem item : l.getList()) {
-			i++;
-			System.out.print(i + ". ");
+		System.out.printf("갯수 : %d\n", l.getCount());
+		for(TodoItem item : l.getList()) {
+			System.out.print(item.getId() + " : ");
 			System.out.println(item.toString());
 		}
 	}
@@ -147,7 +152,7 @@ public class TodoUtil {
 		
 	}
 	public static void loadList(TodoList l, String filename) {
-		
+		System.out.println("load");
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("todolist.txt"));
 			String oneline;
@@ -158,7 +163,10 @@ public class TodoUtil {
 				String desc = st.nextToken();
 				String date = st.nextToken();
 				String due_date = st.nextToken();
-				TodoItem a = new TodoItem(title, desc, category, due_date);
+				String difficulty = st.nextToken();
+				String significance = st.nextToken();
+				System.out.println(significance);
+				TodoItem a = new TodoItem(title, desc, category, due_date, Integer.parseInt(difficulty), Integer.parseInt(significance));
 				a.setCurrent_date(date);
 				l.addItem(a);
 				
@@ -179,6 +187,16 @@ public class TodoUtil {
 		}
 		System.out.printf("총 %d개의 항목을 찾았습니다.\n", count);
 	}
+	
+	public static void findComp(TodoList l, int keyword) {
+		int count=0;
+		for (TodoItem item : l.getListss(keyword)) {
+			System.out.println(item.toString());
+			count++;
+		}
+		System.out.printf("총 %d개의 항목을 찾았습니다.\n", count);
+	}
+
 
 	public static void findItem(TodoList l) {
 		int i = 0;
@@ -252,5 +270,36 @@ public class TodoUtil {
 		for (TodoItem item : l.getOrderedList(orderby, ordering)) {
 			System.out.println(item.toString());
 		}
+	}
+	public static void completeItem(TodoList l) {
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.println("완료할 항목의 번호들을 입력하세요");
+		
+		String indexs = sc.nextLine();
+		
+		String[]index = indexs.split(" ");
+		
+		for(int i=0; i<index.length; i++) {
+			l.completeItem(Integer.parseInt(index[i]));
+		}
+	}
+	public static void cal_mean(TodoList l) {
+		int i = 0;
+		int denominator = l.getList().size();
+		int sum_difficulty = 0;
+		double difficulty_avg = 0;
+		int sum_significance = 0;
+		double significance_avg = 0;
+		for (TodoItem item : l.getList()) {
+			i++;
+			sum_difficulty += item.getDifficulty();
+			sum_significance += item.getSignificance();
+		}
+		difficulty_avg = (float) sum_difficulty / denominator;
+		significance_avg = (float) sum_significance / denominator;
+		System.out.println("전체 중요도의 평균은 " + significance_avg + "입니다.");
+		System.out.println("전체 난이도의 평균은 " +difficulty_avg + "입니다.");
+		
 	}
 }

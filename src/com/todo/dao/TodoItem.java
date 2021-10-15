@@ -10,14 +10,46 @@ public class TodoItem {
     private String category;
     private String due_date;
     private int id;
+    private int is_completed;
+    private int difficulty;
+    private int significance;
 
-    public TodoItem(String title, String desc, String category, String due_date){
+    public TodoItem(String title, String desc, String category, String due_date, int difficulty, int significance){
         this.title=title;
         this.desc=desc;
         SimpleDateFormat f = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
         this.current_date= f.format(new Date());
         this.category=category;
         this.due_date=due_date;
+        this.difficulty=difficulty;
+        this.significance=significance;
+        this.is_completed=0;
+    }
+    
+    public TodoItem(String title, String desc, String category, String due_date, String difficulty, String significance){
+        this.title=title;
+        this.desc=desc;
+        SimpleDateFormat f = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
+        this.current_date= f.format(new Date());
+        this.category=category;
+        this.due_date=due_date;
+        this.difficulty=Integer.parseInt(difficulty);
+        this.significance=Integer.parseInt(significance);
+        this.is_completed=0;
+    }
+    public int getSignificance() {
+        return this.significance;
+    }
+
+    public void setSignificance(int significance) {
+        this.significance = significance;
+    }
+    public int getDifficulty() {
+        return this.difficulty;
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
     }
     
     public String getTitle() {
@@ -66,16 +98,27 @@ public class TodoItem {
     public int getId() {
 		return id;
 	}
-    
+    public void setIs_completed(int is_completed) {
+    	this.is_completed = is_completed;
+    }
+    public int getIs_completed() {
+    	return is_completed;
+    }
     
     
     public String toSaveString() {
-    	return category + "##" + title + "##" + desc + "##" + current_date + "##" + due_date + "\n";
+    	return category + "##" + title + "##" + desc + "##" + current_date + "##" + due_date + "##" + is_completed + "##" + this.difficulty + "##" + this.significance +"\n";
     }
     
     @Override
     public String toString() {
-    	return "[" + category + "]" + title +  " - " +desc + " - " + current_date + " - " + due_date;
+    	if (is_completed == 0){
+    		return "[" + category + "]" + title +  " - " +desc + " - " + current_date + " - " + due_date + " 중요도: " + this.difficulty + " 난이도: " + this.significance;
+    	}
+    	else {
+    		return "[" + category + "]" + title + "[V]" + " - " +desc + " - " + current_date + " - " + due_date  + " 중요도: " + this.difficulty + " 난이도: " + this.significance;
+    	}
+    	
     }
 
 	

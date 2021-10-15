@@ -85,6 +85,18 @@ public class TodoMain {
 				TodoUtil.findCateList(l, cate);
 				break;
 				
+			case "comp":
+				TodoUtil.completeItem(l);
+				System.out.println("완료 체크하였습니다.");
+				break;
+			
+			case "Ls_comp":
+				TodoUtil.findComp(l, 1);
+				break;
+				
+			case "calculate_mean":
+				TodoUtil.cal_mean(l);
+				
 
 			default:
 				System.out.println("올바른 명령을 입력해주세요 모르겠으면 help를 누르세요");
